@@ -1,0 +1,864 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="Mathematical theory of time-domain and spatiotemporal detection of terahertz electric fields.">
+<title>Temporal Evolution of a Terahertz Electric Field</title>
+
+<script>
+window.MathJax = {
+  tex: {
+    inlineMath: [['\\(','\\)']],
+    displayMath: [['\\[','\\]']],
+    tags: 'ams'
+  },
+  svg: {fontCache: 'global'}
+};
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+
+<style>
+:root{
+  color-scheme:dark;
+  --bg:#070b12;--panel:#101827;--panel2:#0b1220;--line:#28364b;
+  --text:#f7f9fc;--muted:#aab6c8;--violet:#9b87f5;--cyan:#42d7e8;
+  --green:#34d399;--red:#fb7185;--gold:#fbbf24;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;background:
+  radial-gradient(circle at 10% 0%,rgba(155,135,245,.17),transparent 28rem),
+  radial-gradient(circle at 90% 10%,rgba(66,215,232,.10),transparent 25rem),
+  var(--bg);
+  color:var(--text);font-family:Inter,ui-sans-serif,system-ui,-apple-system,
+  BlinkMacSystemFont,"Segoe UI",sans-serif;line-height:1.72
+}
+a{color:var(--cyan)}
+.wrap{width:min(1120px,calc(100% - 34px));margin:auto}
+nav{position:sticky;top:0;z-index:30;background:rgba(7,11,18,.90);
+  border-bottom:1px solid rgba(255,255,255,.08);backdrop-filter:blur(14px)}
+nav .wrap{min-height:66px;display:flex;align-items:center;justify-content:space-between;gap:18px}
+.brand{font-weight:850;color:var(--text);text-decoration:none}
+.links{display:flex;flex-wrap:wrap;gap:15px;font-size:.9rem}
+.links a{color:var(--muted);text-decoration:none}.links a:hover{color:white}
+header{padding:92px 0 58px;text-align:center}
+.kicker{display:inline-block;padding:7px 12px;border:1px solid rgba(155,135,245,.45);
+  border-radius:999px;background:rgba(155,135,245,.10);color:#ddd6fe;
+  font-size:.82rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase}
+h1{max-width:960px;margin:22px auto 18px;font-size:clamp(2.5rem,7vw,5.6rem);
+  line-height:1.01;letter-spacing:-.055em}
+.grad{background:linear-gradient(90deg,#c4b5fd,#67e8f9);
+  -webkit-background-clip:text;background-clip:text;color:transparent}
+.lead{max-width:820px;margin:auto;color:var(--muted);font-size:clamp(1.02rem,2.2vw,1.22rem)}
+main{padding-bottom:80px}
+section{scroll-margin-top:88px;margin-top:58px}
+h2{font-size:clamp(1.75rem,4vw,2.55rem);letter-spacing:-.03em;margin-bottom:10px}
+h3{margin-top:0}.intro{max-width:860px;color:var(--muted)}
+.card{padding:23px;border:1px solid var(--line);border-radius:16px;
+  background:linear-gradient(180deg,rgba(16,24,39,.96),rgba(11,18,32,.96));
+  box-shadow:0 18px 45px rgba(0,0,0,.28)}
+.grid2{display:grid;grid-template-columns:repeat(2,1fr);gap:18px;margin-top:22px}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:22px}
+.eq{overflow-x:auto;margin:19px 0;padding:18px;border-left:4px solid var(--violet);
+  border-radius:10px;background:#080e19;text-align:center;color:#efeaff}
+.note{margin:18px 0;padding:17px;border:1px solid rgba(66,215,232,.32);
+  border-radius:12px;background:rgba(66,215,232,.06);color:#dffcff}
+.warn{border-color:rgba(251,191,36,.35);background:rgba(251,191,36,.07);color:#fef3c7}
+.step{position:relative;padding:22px 22px 22px 78px;margin:14px 0;border:1px solid var(--line);
+  border-radius:14px;background:var(--panel)}
+.step b.num{position:absolute;left:21px;top:21px;width:38px;height:38px;border-radius:50%;
+  display:grid;place-items:center;background:linear-gradient(135deg,#7c3aed,#0891b2)}
+.small{font-size:.92rem;color:var(--muted)}
+.table-wrap{overflow-x:auto;margin-top:20px}
+table{width:100%;border-collapse:collapse;background:var(--panel2)}
+th,td{border:1px solid var(--line);padding:12px 14px;text-align:left}
+th{background:#121c2c}
+.timeline{display:grid;gap:13px;margin-top:22px}
+.phase{display:grid;grid-template-columns:130px 1fr;gap:18px;align-items:start;
+  padding:18px;border:1px solid var(--line);border-radius:14px;background:var(--panel)}
+.phase .tag{font-weight:850;color:var(--cyan)}
+.demo{margin-top:25px;padding:24px;border:1px solid var(--line);border-radius:18px;background:var(--panel2)}
+.controls{display:grid;grid-template-columns:1fr auto;gap:16px;align-items:center}
+input[type=range]{width:100%}
+canvas{display:block;width:100%;height:360px;margin-top:18px;border:1px solid var(--line);
+  border-radius:12px;background:#050912}
+.legend{display:flex;gap:18px;flex-wrap:wrap;margin-top:12px;color:var(--muted);font-size:.9rem}
+.dot{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:6px}
+footer{border-top:1px solid var(--line);padding:28px 0 42px;color:var(--muted);text-align:center}
+code{color:#d8b4fe}
+@media(max-width:850px){.grid2,.grid3{grid-template-columns:1fr}.phase{grid-template-columns:1fr}}
+@media(max-width:680px){nav .wrap{padding:12px 0;align-items:flex-start;flex-direction:column}
+header{padding-top:64px}.links{gap:11px}.controls{grid-template-columns:1fr}}
+</style>
+</head>
+
+<body>
+<nav>
+  <div class="wrap">
+    <a class="brand" href="#top">THz Temporal Evolution</a>
+    <div class="links">
+      <a href="#delay">Delay line</a>
+      <a href="#sampling">Sampling</a>
+      <a href="#fieldcube">Field cube</a>
+      <a href="#evolution">Temporal evolution</a>
+      <a href="#fourier">Fourier theory</a>
+      <a href="#polarization">Polarization</a>
+    </div>
+  </div>
+</nav>
+
+<header id="top">
+  <div class="wrap">
+    <div class="kicker">Mathematical theory · no experimental data</div>
+    <h1>Temporal Evolution of a <span class="grad">Terahertz Electric Field</span></h1>
+    <p class="lead">
+      A general mathematical description of how a mechanical delay line samples a
+      broadband THz transient, how the measured frames form \(E_x(x,y,t)\) and
+      \(E_y(x,y,t)\), and how the field evolves in time, frequency, phase, and polarization.
+    </p>
+  </div>
+</header>
+
+<main class="wrap">
+
+<section id="delay">
+<h2>1. Optical delay line: displacement becomes time</h2>
+<p class="intro">
+In coherent THz time-domain detection, the THz pulse and an ultrashort optical probe
+pulse arrive at the detector with a controlled relative delay. A retroreflector mounted
+on a translation stage changes the probe path length. The detector does not directly
+measure an entire waveform at once; it measures one temporal sample for each delay-stage
+position.
+</p>
+
+<div class="card">
+<h3>Double-pass geometry</h3>
+<p>If the stage is displaced by \(x\), the optical path changes by \(2x\). The corresponding delay is</p>
+<div class="eq">
+\[
+\tau(x)=\frac{2x}{c},
+\qquad
+\Delta \tau=\frac{2\Delta x}{c}.
+\tag{1}
+\]
+</div>
+<p>Here \(c\) is the speed of light and \(\Delta x\) is the mechanical step. For a single-pass delay line, the factor of two is absent.</p>
+</div>
+
+<div class="grid3">
+<div class="card"><h3>Position index</h3><div class="eq">\[x_n=x_0+n\Delta x\]</div></div>
+<div class="card"><h3>Delay index</h3><div class="eq">\[\tau_n=\tau_0+n\Delta\tau\]</div></div>
+<div class="card"><h3>Sampled signal</h3><div class="eq">\[S_n=S(\tau_n)\]</div></div>
+</div>
+
+<div class="note">
+The delay axis is a relative time coordinate. Its numerical zero is chosen by calibration;
+it does not have to coincide with the physical onset of the THz pulse.
+</div>
+</section>
+
+<section id="sampling">
+<h2>2. Discrete temporal sampling and measurable bandwidth</h2>
+<p class="intro">
+For \(N_t\) equally spaced delay positions, the time interval, total observation window,
+frequency spacing, and Nyquist frequency are linked. These relations are fundamental:
+changing the delay step changes the maximum non-aliased frequency, while changing the
+number of samples changes the spectral resolution.
+</p>
+
+<div class="grid2">
+<div class="card">
+<h3>Temporal grid</h3>
+<div class="eq">
+\[
+t_n=n\Delta t,\qquad n=0,\ldots,N_t-1.
+\tag{2}
+\]
+</div>
+</div>
+<div class="card">
+<h3>Total sampled duration</h3>
+<div class="eq">
+\[
+T=N_t\Delta t.
+\tag{3}
+\]
+</div>
+</div>
+<div class="card">
+<h3>Frequency spacing</h3>
+<div class="eq">
+\[
+\Delta f=\frac{1}{T}=\frac{1}{N_t\Delta t}.
+\tag{4}
+\]
+</div>
+</div>
+<div class="card">
+<h3>Nyquist frequency</h3>
+<div class="eq">
+\[
+f_{\mathrm{Nyq}}=\frac{1}{2\Delta t}.
+\tag{5}
+\]
+</div>
+</div>
+</div>
+
+<div class="warn note">
+A smaller delay step increases the Nyquist bandwidth but does not, by itself, improve
+the frequency resolution. A longer temporal window improves \(\Delta f\).
+</div>
+</section>
+
+<section id="measurement">
+<h2>3. What the detector samples</h2>
+<p class="intro">
+In coherent detection, the measured detector output is proportional to a gated version
+of the THz electric field. In the ideal limit of an infinitely short probe pulse and a
+flat detector response, the signal is proportional to the instantaneous THz field.
+</p>
+
+<div class="eq">
+\[
+S(\tau)\propto E_{\mathrm{THz}}(\tau).
+\tag{6}
+\]
+</div>
+
+<p>More generally, the detector records a convolution:</p>
+
+<div class="eq">
+\[
+S(\tau)=\int_{-\infty}^{\infty}
+E_{\mathrm{THz}}(t)\,h_{\mathrm{det}}(\tau-t)\,dt
+=
+\left(E_{\mathrm{THz}}*h_{\mathrm{det}}\right)(\tau),
+\tag{7}
+\]
+</div>
+
+<p>where \(h_{\mathrm{det}}(t)\) contains the probe-pulse envelope, electro-optic crystal
+response, phase matching, absorption, analyzer response, and electronics.</p>
+
+<div class="eq">
+\[
+\widetilde S(\omega)=H_{\mathrm{det}}(\omega)\widetilde E_{\mathrm{THz}}(\omega).
+\tag{8}
+\]
+</div>
+</section>
+
+<section id="fieldcube">
+<h2>4. From sequential frames to the spatiotemporal field cube</h2>
+<p class="intro">
+When a camera or two-dimensional detector records one image at every delay,
+the experiment produces a stack of frames. The \(n\)-th frame is a transverse
+electric-field map evaluated at \(t_n\).
+</p>
+
+<div class="eq">
+\[
+E_x^{(n)}(x,y)=E_x(x,y,t_n),\qquad
+E_y^{(n)}(x,y)=E_y(x,y,t_n).
+\tag{9}
+\]
+</div>
+
+<p>Stacking the frames gives two three-dimensional arrays:</p>
+
+<div class="eq">
+\[
+\mathbf E(x,y,t_n)=
+\begin{bmatrix}
+E_x(x,y,t_n)\\[2mm]
+E_y(x,y,t_n)
+\end{bmatrix},
+\qquad
+\text{array shape }(N_t,N_y,N_x).
+\tag{10}
+\]
+</div>
+
+<div class="grid2">
+<div class="card">
+<h3>Instantaneous amplitude</h3>
+<div class="eq">
+\[
+A(x,y,t)=\sqrt{E_x^2(x,y,t)+E_y^2(x,y,t)}.
+\tag{11}
+\]
+</div>
+</div>
+<div class="card">
+<h3>Instantaneous field direction</h3>
+<div class="eq">
+\[
+\theta(x,y,t)=\operatorname{atan2}\!\left(E_y(x,y,t),E_x(x,y,t)\right).
+\tag{12}
+\]
+</div>
+</div>
+</div>
+
+<p class="small">
+Equation (12) gives a directed instantaneous vector angle. It is not identical to the
+polarization-ellipse azimuth obtained from frequency-domain Stokes parameters.
+</p>
+</section>
+
+<section id="evolution">
+<h2>5. Step-by-step temporal evolution of a broadband THz pulse</h2>
+<p class="intro">
+A single-cycle THz transient is not a slowly varying intensity pulse. It is a signed
+electric field. Therefore, the field can be zero while electromagnetic energy is still
+present in the pulse envelope, and the vector direction reverses when the field changes sign.
+</p>
+
+<div class="card">
+<h3>Representative analytic field</h3>
+<p>A common theory model is the derivative of a Gaussian current or polarization response:</p>
+<div class="eq">
+\[
+E(t)=E_0\frac{t-t_0}{\sigma}
+\exp\!\left[-\frac{(t-t_0)^2}{2\sigma^2}\right].
+\tag{13}
+\]
+</div>
+<p>This waveform has two lobes with opposite signs and a zero crossing at \(t=t_0\).</p>
+</div>
+
+<div class="timeline">
+<div class="phase">
+<div class="tag">Stage I<br>Pre-pulse</div>
+<div>
+\[
+|t-t_0|\gg \sigma,\qquad E_x\approx E_y\approx 0.
+\]
+The probe reaches the detector before temporal overlap with the THz transient. The
+measured signal is dominated by baseline and noise.
+</div>
+</div>
+
+<div class="phase">
+<div class="tag">Stage II<br>Leading edge</div>
+<div>
+The probe begins to overlap the first temporal lobe. The field amplitude grows:
+\[
+\frac{\partial |E|}{\partial t}>0.
+\]
+The first nonzero spatial frame reveals where the pulse front arrives earliest.
+</div>
+</div>
+
+<div class="phase">
+<div class="tag">Stage III<br>First extremum</div>
+<div>
+At a temporal extremum,
+\[
+\frac{\partial E}{\partial t}=0,\qquad |E|\ \text{is locally maximal}.
+\]
+The instantaneous field map has its strongest signed contrast for the first polarity.
+</div>
+</div>
+
+<div class="phase">
+<div class="tag">Stage IV<br>Zero crossing</div>
+<div>
+\[
+E_x(x,y,t_z)\approx 0,\qquad E_y(x,y,t_z)\approx 0
+\]
+for a scalar, uniformly delayed pulse. In a structured or dispersive beam, different
+pixels may cross zero at different times, so the global image need not vanish simultaneously.
+</div>
+</div>
+
+<div class="phase">
+<div class="tag">Stage V<br>Polarity reversal</div>
+<div>
+The electric field changes sign. For a fixed local polarization direction,
+\[
+\mathbf E(x,y,t>t_z)\approx-\mathbf E(x,y,t<t_z).
+\]
+The quiver arrows reverse by \(180^\circ\), although the polarization axis is unchanged.
+</div>
+</div>
+
+<div class="phase">
+<div class="tag">Stage VI<br>Second extremum</div>
+<div>
+The opposite field polarity reaches maximum magnitude. Asymmetry between the two lobes
+signals spectral phase, detector transfer-function effects, material dispersion, or
+a non-ideal source current.
+</div>
+</div>
+
+<div class="phase">
+<div class="tag">Stage VII<br>Trailing field</div>
+<div>
+The main transient decays. Residual oscillations may arise from water-vapor resonances,
+etalon reflections, phonon resonances, waveguide modes, or detector ringing.
+</div>
+</div>
+</div>
+
+<div class="demo">
+<h3>Theoretical time evolution</h3>
+<p class="small">Move the delay slider. The curves are an analytic two-component THz pulse, not measured data.</p>
+<div class="controls">
+<input id="timeSlider" type="range" min="-4" max="4" step="0.01" value="-2">
+<strong id="timeLabel">\(t/\sigma=-2.00\)</strong>
+</div>
+<canvas id="fieldCanvas" width="980" height="360"></canvas>
+<div class="legend">
+<span><i class="dot" style="background:#42d7e8"></i>\(E_x(t)\)</span>
+<span><i class="dot" style="background:#fb7185"></i>\(E_y(t)\)</span>
+<span><i class="dot" style="background:#fbbf24"></i>current delay</span>
+</div>
+</div>
+</section>
+
+<section id="vector">
+<h2>6. Two-component temporal field and polarization trajectory</h2>
+<p class="intro">
+At one spatial coordinate, the time-dependent transverse field is
+\(\mathbf E_\perp(t)=E_x(t)\hat{\mathbf x}+E_y(t)\hat{\mathbf y}\).
+Its tip traces a trajectory in the \(E_x\)-\(E_y\) plane.
+</p>
+
+<div class="eq">
+\[
+\mathbf E_\perp(t)=
+\begin{bmatrix}
+E_x(t)\\
+E_y(t)
+\end{bmatrix}.
+\tag{14}
+\]
+</div>
+
+<p>For a monochromatic component,</p>
+
+<div class="eq">
+\[
+E_x(t)=A_x\cos(\omega t+\phi_x),\qquad
+E_y(t)=A_y\cos(\omega t+\phi_y).
+\tag{15}
+\]
+</div>
+
+<p>Defining \(\delta=\phi_y-\phi_x\), elimination of time gives the polarization ellipse:</p>
+
+<div class="eq">
+\[
+\left(\frac{E_x}{A_x}\right)^2+
+\left(\frac{E_y}{A_y}\right)^2
+-2\frac{E_xE_y}{A_xA_y}\cos\delta
+=\sin^2\delta.
+\tag{16}
+\]
+</div>
+
+<div class="note">
+For a broadband pulse, the instantaneous vector trajectory is a coherent superposition
+of many frequency-dependent ellipses. A single time-domain angle does not fully specify
+the broadband polarization state.
+</div>
+</section>
+
+<section id="preprocessing">
+<h2>7. Temporal baseline removal and windowing</h2>
+<p class="intro">
+Before the Fourier transform, a pixel-wise temporal mean is commonly removed. This
+suppresses the zero-frequency component caused by offsets.
+</p>
+
+<div class="eq">
+\[
+E_x'(x,y,t_n)=E_x(x,y,t_n)
+-\frac{1}{N_t}\sum_{n=0}^{N_t-1}E_x(x,y,t_n),
+\tag{17}
+\]
+\[
+E_y'(x,y,t_n)=E_y(x,y,t_n)
+-\frac{1}{N_t}\sum_{n=0}^{N_t-1}E_y(x,y,t_n).
+\tag{18}
+\]
+</div>
+
+<p>A window \(w_n\) may then be applied:</p>
+
+<div class="eq">
+\[
+E_{x,w}(x,y,t_n)=w_nE_x'(x,y,t_n).
+\tag{19}
+\]
+</div>
+
+<p>Windowing reduces edge discontinuities but broadens spectral features. It changes the
+effective amplitude and spectral resolution, so it must be reported.</p>
+</section>
+
+<section id="fourier">
+<h2>8. Pixel-wise Fourier transform</h2>
+<p class="intro">
+The temporal transform is performed independently at every spatial pixel. The output is
+a complex field, retaining both amplitude and phase.
+</p>
+
+<div class="eq">
+\[
+\widetilde E_x(x,y,f_k)
+=
+\sum_{n=0}^{N_t-1}
+E_{x,w}(x,y,t_n)
+\exp\!\left(-i2\pi\frac{kn}{N_t}\right),
+\tag{20}
+\]
+\[
+f_k=\frac{k}{N_t\Delta t},
+\qquad
+k=0,\ldots,\left\lfloor\frac{N_t}{2}\right\rfloor.
+\tag{21}
+\]
+</div>
+
+<div class="grid2">
+<div class="card">
+<h3>Spectral amplitude</h3>
+<div class="eq">
+\[
+A_x(x,y,f)=|\widetilde E_x(x,y,f)|.
+\tag{22}
+\]
+</div>
+</div>
+<div class="card">
+<h3>Spectral phase</h3>
+<div class="eq">
+\[
+\phi_x(x,y,f)=\arg\widetilde E_x(x,y,f).
+\tag{23}
+\]
+</div>
+</div>
+</div>
+
+<p>The same definitions apply to \(y\). The complex representation is</p>
+
+<div class="eq">
+\[
+\widetilde E_x=A_xe^{i\phi_x},\qquad
+\widetilde E_y=A_ye^{i\phi_y}.
+\tag{24}
+\]
+</div>
+</section>
+
+<section id="narrowband">
+<h2>9. Narrowband field reconstructed at a selected time</h2>
+<p class="intro">
+A frequency bin is not itself a time-domain snapshot. To reconstruct the real field
+contribution of frequency \(f_k\) at time \(t\), the complex spectral field must be
+multiplied by its temporal phase factor.
+</p>
+
+<div class="eq">
+\[
+E_{x,k}(x,y,t)
+=
+\Re\left\{
+\widetilde E_x(x,y,f_k)e^{i2\pi f_kt}
+\right\},
+\tag{25}
+\]
+\[
+E_{y,k}(x,y,t)
+=
+\Re\left\{
+\widetilde E_y(x,y,f_k)e^{i2\pi f_kt}
+\right\}.
+\tag{26}
+\]
+</div>
+
+<p>The full real time-domain field is obtained by summing all positive- and
+negative-frequency contributions consistently:</p>
+
+<div class="eq">
+\[
+E_x(x,y,t)=
+\int_{-\infty}^{\infty}
+\widetilde E_x(x,y,f)e^{i2\pi ft}\,df.
+\tag{27}
+\]
+</div>
+
+<div class="warn note">
+Taking only \(\Re\{\widetilde E_x(f_k)\}\) corresponds to evaluating the selected
+frequency component at a chosen zero of time. It does not represent arbitrary \(t\)
+unless the factor \(e^{i2\pi f_kt}\) is included.
+</div>
+</section>
+
+<section id="phase">
+<h2>10. Spectral phase, delay, and pulse-front evolution</h2>
+<p class="intro">
+A linear spectral phase corresponds to a temporal delay. A spatially varying linear phase
+therefore maps the local pulse arrival time.
+</p>
+
+<div class="eq">
+\[
+\phi(x,y,\omega)=\phi_0(x,y)-\omega\tau_g(x,y)+\phi_{\mathrm{res}}(x,y,\omega).
+\tag{28}
+\]
+</div>
+
+<div class="eq">
+\[
+\tau_g(x,y,\omega)
+=
+-\frac{\partial\phi(x,y,\omega)}{\partial\omega}.
+\tag{29}
+\]
+</div>
+
+<p>If \(\tau_g\) varies linearly across \(x\), the pulse front is tilted:</p>
+
+<div class="eq">
+\[
+\tau_g(x)=\tau_0+\alpha x,
+\qquad
+\alpha=\frac{\partial\tau_g}{\partial x}.
+\tag{30}
+\]
+</div>
+
+<p>If it varies quadratically, the pulse front is curved:</p>
+
+<div class="eq">
+\[
+\tau_g(x,y)=\tau_0+a_xx^2+a_yy^2.
+\tag{31}
+\]
+</div>
+</section>
+
+<section id="polarization">
+<h2>11. Frequency-resolved polarization and Stokes parameters</h2>
+<p class="intro">
+At a selected frequency, the complex Jones field is
+\(\widetilde{\mathbf E}=(\widetilde E_x,\widetilde E_y)^T\).
+The Stokes parameters are calculated from complex cross-products.
+</p>
+
+<div class="eq">
+\[
+S_0=|\widetilde E_x|^2+|\widetilde E_y|^2,
+\tag{32}
+\]
+\[
+S_1=|\widetilde E_x|^2-|\widetilde E_y|^2,
+\tag{33}
+\]
+\[
+S_2=2\Re\!\left(\widetilde E_x\widetilde E_y^*\right),
+\tag{34}
+\]
+\[
+S_3=2\Im\!\left(\widetilde E_x\widetilde E_y^*\right).
+\tag{35}
+\]
+</div>
+
+<p>The normalized parameters are \(s_i=S_i/S_0\). The polarization azimuth and
+ellipticity angle are</p>
+
+<div class="eq">
+\[
+\psi=\frac{1}{2}\operatorname{atan2}(S_2,S_1),
+\tag{36}
+\]
+\[
+\chi=\frac{1}{2}\sin^{-1}\!\left(\frac{S_3}{S_0}\right).
+\tag{37}
+\]
+</div>
+
+<p>For partially polarized data,</p>
+
+<div class="eq">
+\[
+\mathrm{DoP}=
+\frac{\sqrt{S_1^2+S_2^2+S_3^2}}{S_0},
+\qquad
+\mathrm{DoLP}=
+\frac{\sqrt{S_1^2+S_2^2}}{S_0}.
+\tag{38}
+\]
+</div>
+
+<div class="note">
+Pixels with small \(S_0\) must be masked before normalization. Otherwise, division by
+noise produces unstable \(s_1,s_2,s_3,\psi,\chi\).
+</div>
+</section>
+
+<section id="roi">
+<h2>12. Spatial averaging and why the order matters</h2>
+<p class="intro">
+An ROI-averaged time trace is a coherent spatial average:
+</p>
+
+<div class="eq">
+\[
+\overline E_x(t)=\frac{1}{N_{\mathrm{ROI}}}
+\sum_{(x,y)\in\mathrm{ROI}}E_x(x,y,t).
+\tag{39}
+\]
+</div>
+
+<p>Fourier transforming this average gives</p>
+
+<div class="eq">
+\[
+\mathcal F\{\overline E_x(t)\}
+=
+\frac{1}{N_{\mathrm{ROI}}}
+\sum_{(x,y)\in\mathrm{ROI}}\widetilde E_x(x,y,f).
+\tag{40}
+\]
+</div>
+
+<p>This coherent average can cancel spatial regions with opposite phase. In contrast,
+averaging \(|\widetilde E_x|\) is an incoherent amplitude average and answers a different
+physical question.</p>
+</section>
+
+<section id="uncertainty">
+<h2>13. Temporal resolution, timing jitter, and measured field</h2>
+<p class="intro">
+The experimentally reconstructed waveform is the true field filtered by the temporal
+instrument response and timing uncertainty.
+</p>
+
+<div class="eq">
+\[
+E_{\mathrm{meas}}(t)=
+E_{\mathrm{true}}(t)*g_{\mathrm{probe}}(t)
+*h_{\mathrm{crystal}}(t)
+*g_{\mathrm{jitter}}(t).
+\tag{41}
+\]
+</div>
+
+<p>For Gaussian timing responses with RMS widths \(\sigma_i\),</p>
+
+<div class="eq">
+\[
+\sigma_{\mathrm{eff}}^2=
+\sigma_{\mathrm{probe}}^2+
+\sigma_{\mathrm{jitter}}^2+
+\sigma_{\mathrm{other}}^2.
+\tag{42}
+\]
+</div>
+
+<p>A Gaussian timing blur attenuates high frequencies according to</p>
+
+<div class="eq">
+\[
+H_{\mathrm{jitter}}(\omega)=
+\exp\!\left(-\frac{\omega^2\sigma_{\mathrm{jitter}}^2}{2}\right).
+\tag{43}
+\]
+</div>
+</section>
+
+<section id="summary">
+<h2>14. Complete theoretical chain</h2>
+<div class="table-wrap">
+<table>
+<thead><tr><th>Step</th><th>Mathematical object</th><th>Physical meaning</th></tr></thead>
+<tbody>
+<tr><td>Delay stage</td><td>\(\tau_n=2x_n/c\)</td><td>Converts position into probe–THz delay</td></tr>
+<tr><td>Frame acquisition</td><td>\(E_x(x,y,t_n),E_y(x,y,t_n)\)</td><td>Samples the instantaneous transverse field</td></tr>
+<tr><td>Field cube</td><td>\(\mathbf E(x,y,t_n)\)</td><td>Stores temporal evolution at every pixel</td></tr>
+<tr><td>Preprocessing</td><td>\(E'=E-\langle E\rangle_t\)</td><td>Removes temporal offset</td></tr>
+<tr><td>Fourier transform</td><td>\(\widetilde E(x,y,f)\)</td><td>Produces complex spectral field</td></tr>
+<tr><td>Amplitude and phase</td><td>\(|\widetilde E|,\arg\widetilde E\)</td><td>Separates spectral strength and timing information</td></tr>
+<tr><td>Narrowband evolution</td><td>\(\Re\{\widetilde Ee^{i2\pi ft}\}\)</td><td>Shows a selected frequency evolving in time</td></tr>
+<tr><td>Polarization</td><td>\(S_0,S_1,S_2,S_3\)</td><td>Describes the local polarization ellipse</td></tr>
+</tbody>
+</table>
+</div>
+</section>
+
+</main>
+
+<footer>
+<div class="wrap">
+Theory page prepared for a GitHub Pages educational resource on spatiotemporal THz electric-field detection.
+</div>
+</footer>
+
+<script>
+const slider = document.getElementById("timeSlider");
+const label = document.getElementById("timeLabel");
+const canvas = document.getElementById("fieldCanvas");
+const ctx = canvas.getContext("2d");
+
+function ex(t){
+  return t*Math.exp(-0.5*t*t);
+}
+function ey(t){
+  const u=t-0.32;
+  return 0.58*u*Math.exp(-0.5*(u/1.12)*(u/1.12));
+}
+function mapX(t){return 55+(t+4)/8*(canvas.width-90)}
+function mapY(v){return canvas.height/2-v*128}
+
+function draw(){
+  const tsel=parseFloat(slider.value);
+  label.textContent=`t/σ = ${tsel.toFixed(2)}`;
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+
+  ctx.strokeStyle="#263247";ctx.lineWidth=1;
+  for(let i=0;i<=8;i++){
+    const x=55+i*(canvas.width-90)/8;
+    ctx.beginPath();ctx.moveTo(x,22);ctx.lineTo(x,canvas.height-38);ctx.stroke();
+  }
+  ctx.beginPath();ctx.moveTo(55,canvas.height/2);ctx.lineTo(canvas.width-35,canvas.height/2);ctx.stroke();
+
+  function curve(fn,color){
+    ctx.strokeStyle=color;ctx.lineWidth=3;ctx.beginPath();
+    for(let i=0;i<=800;i++){
+      const t=-4+8*i/800, x=mapX(t), y=mapY(fn(t));
+      if(i===0)ctx.moveTo(x,y);else ctx.lineTo(x,y);
+    }
+    ctx.stroke();
+  }
+  curve(ex,"#42d7e8");curve(ey,"#fb7185");
+
+  const xs=mapX(tsel);
+  ctx.strokeStyle="#fbbf24";ctx.lineWidth=2;
+  ctx.beginPath();ctx.moveTo(xs,22);ctx.lineTo(xs,canvas.height-38);ctx.stroke();
+
+  for(const [fn,color] of [[ex,"#42d7e8"],[ey,"#fb7185"]]){
+    ctx.fillStyle=color;ctx.beginPath();ctx.arc(xs,mapY(fn(tsel)),6,0,Math.PI*2);ctx.fill();
+  }
+
+  ctx.fillStyle="#aab6c8";ctx.font="15px system-ui";
+  ctx.fillText("-4σ",45,canvas.height-15);
+  ctx.fillText("0",canvas.width/2-5,canvas.height-15);
+  ctx.fillText("+4σ",canvas.width-66,canvas.height-15);
+  ctx.fillText("Electric field",10,24);
+}
+slider.addEventListener("input",draw);
+draw();
+</script>
+</body>
+</html>
